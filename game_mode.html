@@ -4,69 +4,409 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Mode - Παραγοντοποίηση</title>
+    <meta name="description" content="Παιχνίδι παραγοντοποίησης - 5 προβλήματα με τελική βαθμολογία και αναλυτική αναφορά.">
+    <meta property="og:title" content="Game Mode - Παραγοντοποίηση">
+    <meta property="og:description" content="Παιχνίδι παραγοντοποίησης - 5 προβλήματα με τελική βαθμολογία και αναλυτική αναφορά.">
+    <meta property="og:type" content="website">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f7f6; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .container { background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); padding: 25px 30px; width: 100%; max-width: 450px; text-align: center; }
-        h1 { color: #005a9c; margin-top: 0; margin-bottom: 20px; font-size: 1.5rem; }
-        .problem-header { margin-bottom: 25px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .problem-header label { font-weight: 600; color: #333; }
-        #mainNumberInput { font-family: "Courier New", Courier, monospace; font-size: 2rem; font-weight: bold; color: #005a9c; width: 150px; text-align: center; border: 2px solid #007bff; border-radius: 6px; padding: 8px; }
-        #mainNumberInput:disabled { background-color: #eee; color: #777; border-color: #ddd; }
-        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
-        #gameProgress { font-size: 1.2rem; font-weight: 600; color: #d9534f; margin-bottom: 15px; }
-        .hidden { display: none; }
-        #problemContainer { margin: 20px auto; width: fit-content; }
-        .steps-table { border-collapse: collapse; }
-        .steps-table td { padding: 5px; font-family: "Courier New", Courier, monospace; font-size: 1.1rem; text-align: right; height: 40px; }
-        .steps-table td:first-child { border-right: 2px solid #333; padding-right: 12px; min-width: 60px; }
-        .steps-table td:last-child { padding-left: 12px; }
-        .steps-table tr:last-child td { font-weight: bold; }
-        .quiz-input { width: 60px; padding: 8px; font-family: "Courier New", Courier, monospace; font-size: 1.1rem; text-align: right; border: 2px solid #ddd; border-radius: 4px; transition: all 0.2s ease; }
-        .quiz-input.wrong { background-color: #fff0f0; border-color: #e60000; }
-        .quiz-input.correct { background-color: #f0fff0; border-color: #009900; }
-        .button-container { margin-top: 25px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;}
-        button, .button-link { padding: 12px 20px; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease; text-decoration: none; display: inline-block; }
-        #checkBtn { background-color: #007bff; color: white; }
-        #checkBtn:hover { background-color: #0056b3; }
-        .practice-link { background-color: #6c757d; color: white; }
-        .practice-link:hover { background-color: #5a6268; }
-        #startGameBtn { background-color: #d9534f; color: white; } 
-        #startGameBtn:hover { background-color: #c9302c; }
-        #resultContainer { margin-top: 20px; padding: 15px; background-color: #f0fff0; border: 1px solid #009900; border-radius: 6px; text-align: center; font-size: 1.1rem; font-weight: 600; color: #004085; min-height: 1.5em; line-height: 1.5; }
-        #resultContainer:not(.visible) { visibility: hidden; opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; margin-top: 0; }
-        
-        /* --- Η ΑΛΛΑΓΗ ΕΙΝΑΙ ΕΔΩ --- */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #f4f7f6; 
+            color: #333; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px; 
+            box-sizing: border-box;
+        }
+        .container { 
+            position: relative;
+            background-color: #ffffff; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+            padding: 25px 30px; 
+            width: 100%; 
+            max-width: 450px; 
+            text-align: center; 
+            box-sizing: border-box;
+        }
+        .info-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background-color: transparent;
+            border: 1px solid #d0e2ff;
+            color: #007bff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+        .info-btn:hover {
+            background-color: #e6f2ff;
+            color: #005a9c;
+            border-color: #007bff;
+            transform: scale(1.05);
+        }
+        .info-btn:focus-visible {
+            outline: 2px solid #007bff;
+            outline-offset: 2px;
+        }
+        h1 { 
+            color: #005a9c; 
+            margin-top: 0; 
+            margin-bottom: 20px; 
+            font-size: 1.5rem; 
+            padding: 0 35px;
+        }
+        .problem-header { 
+            margin-bottom: 25px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px; 
+        }
+        .problem-header label { 
+            font-weight: 600; 
+            color: #333; 
+        }
+        #mainNumberInput { 
+            font-family: "Courier New", Courier, monospace; 
+            font-size: 2rem; 
+            font-weight: bold; 
+            color: #005a9c; 
+            width: 150px; 
+            text-align: center; 
+            border: 2px solid #007bff; 
+            border-radius: 6px; 
+            padding: 8px; 
+            box-sizing: border-box;
+        }
+        #mainNumberInput:disabled { 
+            background-color: #eee; 
+            color: #777; 
+            border-color: #ddd; 
+            cursor: not-allowed;
+        }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] { 
+            -moz-appearance: textfield; 
+        }
+        #gameProgress { 
+            font-size: 1.2rem; 
+            font-weight: 600; 
+            color: #d9534f; 
+            margin-bottom: 15px; 
+        }
+        .hidden { 
+            display: none; 
+        }
+        #problemContainer { 
+            margin: 20px auto; 
+            width: fit-content; 
+        }
+        .steps-table { 
+            border-collapse: collapse; 
+        }
+        .steps-table td { 
+            padding: 5px; 
+            font-family: "Courier New", Courier, monospace; 
+            font-size: 1.1rem; 
+            text-align: right; 
+            height: 40px; 
+        }
+        .steps-table td:first-child { 
+            border-right: 2px solid #333; 
+            padding-right: 12px; 
+            min-width: 60px; 
+        }
+        .steps-table td:last-child { 
+            padding-left: 12px; 
+        }
+        .steps-table tr:last-child td { 
+            font-weight: bold; 
+        }
+        .quiz-input { 
+            width: 60px; 
+            padding: 8px; 
+            font-family: "Courier New", Courier, monospace; 
+            font-size: 1.1rem; 
+            text-align: right; 
+            border: 2px solid #ddd; 
+            border-radius: 4px; 
+            transition: all 0.2s ease; 
+        }
+        .quiz-input.wrong { 
+            background-color: #fff0f0; 
+            border-color: #e60000; 
+        }
+        .quiz-input.correct { 
+            background-color: #f0fff0; 
+            border-color: #009900; 
+        }
+        .button-container { 
+            margin-top: 25px; 
+            display: flex; 
+            gap: 10px; 
+            justify-content: center; 
+            flex-wrap: wrap;
+        }
+        button, .button-link { 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: background-color 0.2s ease; 
+            text-decoration: none; 
+            display: inline-block; 
+        }
+        #checkBtn { 
+            background-color: #007bff; 
+            color: white; 
+        }
+        #checkBtn:hover { 
+            background-color: #0056b3; 
+        }
+        .practice-link { 
+            background-color: #6c757d; 
+            color: white; 
+        }
+        .practice-link:hover { 
+            background-color: #5a6268; 
+        }
+        #startGameBtn { 
+            background-color: #d9534f; 
+            color: white; 
+        } 
+        #startGameBtn:hover { 
+            background-color: #c9302c; 
+        }
+        #resultContainer { 
+            margin-top: 20px; 
+            padding: 15px; 
+            background-color: #f0fff0; 
+            border: 1px solid #009900; 
+            border-radius: 6px; 
+            text-align: center; 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            color: #004085; 
+            min-height: 1.5em; 
+            line-height: 1.5; 
+        }
+        #resultContainer:not(.visible) { 
+            visibility: hidden; 
+            opacity: 0; 
+            max-height: 0; 
+            padding-top: 0; 
+            padding-bottom: 0; 
+            margin-top: 0; 
+        }
         #resultContainer.visible { 
             visibility: visible; 
             opacity: 1; 
-            /* ΑΦΑΙΡΕΘΗΚΕ Η ΓΡΑΜΜΗ: max-height: 1500px; */
             transition: all 0.4s ease; 
         }
-        /* --- ΤΕΛΟΣ ΑΛΛΑΓΗΣ --- */
-        
-        #resultContainer h2 { color: #005a9c; margin-top: 0; }
-        #resultContainer strong { font-size: 2rem; color: #d9534f; }
-        .report-section { text-align: left; margin-top: 15px; padding-top: 15px; border-top: 2px solid #005a9c; }
-        .report-item { margin-bottom: 15px; padding: 10px; border-radius: 5px; border: 1px solid #ddd; }
-        .report-item.correct { background-color: #f0fff0; border-color: #009900; }
-        .report-item.incorrect { background-color: #fff0f0; border-color: #e60000; }
-        .report-item h4 { margin-top: 0; margin-bottom: 5px; font-size: 1.2rem; }
-        .report-item p { margin: 0; font-size: 1rem; }
-        .report-steps-table { margin: 10px auto 10px 0; border-collapse: collapse; background-color: #fff; }
-        .report-steps-table td { border: 1px solid #ccc; padding: 5px; font-family: "Courier New", Courier, monospace; text-align: right; }
-        .report-steps-table td.correct { background-color: #e0ffe0; }
-        .report-steps-table td.wrong { background-color: #ffe0e0; color: #c00; font-weight: bold; }
-        sup { font-size: 0.8em; vertical-align: super; }
+        #resultContainer h2 { 
+            color: #005a9c; 
+            margin-top: 0; 
+        }
+        #resultContainer strong { 
+            font-size: 2rem; 
+            color: #d9534f; 
+        }
+        .report-section { 
+            text-align: left; 
+            margin-top: 15px; 
+            padding-top: 15px; 
+            border-top: 2px solid #005a9c; 
+        }
+        .report-item { 
+            margin-bottom: 15px; 
+            padding: 10px; 
+            border-radius: 5px; 
+            border: 1px solid #ddd; 
+        }
+        .report-item.correct { 
+            background-color: #f0fff0; 
+            border-color: #009900; 
+        }
+        .report-item.incorrect { 
+            background-color: #fff0f0; 
+            border-color: #e60000; 
+        }
+        .report-item h4 { 
+            margin-top: 0; 
+            margin-bottom: 5px; 
+            font-size: 1.2rem; 
+        }
+        .report-item p { 
+            margin: 0; 
+            font-size: 1rem; 
+        }
+        .report-steps-table { 
+            margin: 10px auto 10px 0; 
+            border-collapse: collapse; 
+            background-color: #fff; 
+        }
+        .report-steps-table td { 
+            border: 1px solid #ccc; 
+            padding: 5px; 
+            font-family: "Courier New", Courier, monospace; 
+            text-align: right; 
+        }
+        .report-steps-table td.correct { 
+            background-color: #e0ffe0; 
+        }
+        .report-steps-table td.wrong { 
+            background-color: #ffe0e0; 
+            color: #c00; 
+            font-weight: bold; 
+        }
+        sup { 
+            font-size: 0.8em; 
+            vertical-align: super; 
+        }
         .button-container .practice-link {
             margin-top: 15px;
             width: calc(100% - 40px); 
+        }
+
+        /* Modal (About / Credits) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(2px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 400px;
+            padding: 28px 24px 22px 24px;
+            position: relative;
+            text-align: center;
+            transform: translateY(-10px) scale(0.98);
+            transition: transform 0.2s ease;
+            box-sizing: border-box;
+            border-top: 5px solid #005a9c;
+        }
+        .modal-overlay.active .modal-card {
+            transform: translateY(0) scale(1);
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+            line-height: 1;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: color 0.2s, background-color 0.2s;
+        }
+        .modal-close-btn:hover {
+            color: #d9534f;
+            background-color: #f8f9fa;
+        }
+        .modal-title {
+            color: #005a9c;
+            margin: 0 0 10px 0;
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+        .modal-badge {
+            display: inline-block;
+            background-color: #e6f2ff;
+            color: #005a9c;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 3px 12px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #cce5ff;
+        }
+        .modal-body {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #444;
+        }
+        .modal-architect {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+            padding: 10px 14px;
+            background-color: #f4f7f6;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+        }
+        .modal-architect strong {
+            color: #005a9c;
+        }
+        .modal-license {
+            font-size: 0.85rem;
+            color: #666;
+            border-top: 1px solid #eee;
+            padding-top: 14px;
+        }
+        .modal-license a {
+            color: #007bff;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+        .modal-license a:hover {
+            color: #0056b3;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <!-- Κουμπί Πληροφοριών (About / Credits) -->
+        <button type="button" id="aboutBtn" class="info-btn" title="Πληροφορίες &amp; Συντελεστές" aria-label="Πληροφορίες εφαρμογής">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+        </button>
+
         <h1>Game Mode</h1>
         
         <div class="problem-header">
@@ -79,7 +419,6 @@
 
         <div class="button-container">
             <button id="checkBtn">Έλεγχος</button>
-            
             <button id="startGameBtn" class="hidden">Παίξε Ξανά</button>
             <a href="index.html" class="button-link practice-link hidden">Επιστροφή στην Εξάσκηση</a>
         </div>

@@ -1,3 +1,9 @@
+// ============================================================================
+// ΕΚΔΟΣΗ ΕΦΑΡΜΟΓΗΣ (APPLICATION VERSION)
+// Τροποποιήστε την παρακάτω σταθερά για ενημέρωση της έκδοσης της εφαρμογής
+// ============================================================================
+const APP_VERSION = "1.0.0";
+
 // Δημιουργούμε ένα global object 'App' για να οργανώσουμε τον κώδικα μας
 const App = {
     // 1. Ιδιότητες (Μεταβλητές Κατάστασης)
@@ -10,6 +16,7 @@ const App = {
     resultContainer: null,
     gameProgress: null,
     practiceLink: null, // Σύνδεσμος επιστροφής
+    aboutModal: null,   // Modal πληροφοριών / credits
 
     // State
     currentProblemFactors: {},
@@ -47,6 +54,17 @@ const App = {
             }
         });
 
+        // Αυτόματη επιλογή του υπάρχοντος αριθμού (select()) κατά το focus/click
+        this.mainNumberInput.addEventListener('focus', function(e) {
+            e.target.select();
+        });
+        this.mainNumberInput.addEventListener('click', function(e) {
+            e.target.select();
+        });
+
+        // Αρχικοποίηση του Modal Πληροφοριών
+        this.initAboutModal();
+
         // Φόρτωσε το πρώτο πρόβλημα εξάσκησης
         this.generatePracticeProblem();
     },
@@ -77,8 +95,98 @@ const App = {
         document.addEventListener('keydown', this.handleKeyDown.bind(this));
         // --- ΤΕΛΟΣ ΑΛΛΑΓΗΣ ---
 
+        // Αρχικοποίηση του Modal Πληροφοριών
+        this.initAboutModal();
+
         // Ξεκίνα το παιχνίδι αμέσως
         this.startGame();
+    },
+
+    // 2.1 Modal Πληροφοριών (About / Credits)
+    
+    /**
+     * Δημιουργεί και ρυθμίζει το modal πληροφοριών ενιαία για όλες τις σελίδες
+     */
+    initAboutModal: function() {
+        const aboutBtn = document.getElementById('aboutBtn');
+
+        // Δημιουργία του modal στο DOM αν δεν προϋπάρχει
+        let modal = document.getElementById('aboutModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'aboutModal';
+            modal.className = 'modal-overlay';
+            modal.setAttribute('role', 'dialog');
+            modal.setAttribute('aria-modal', 'true');
+            modal.setAttribute('aria-labelledby', 'modalAppTitle');
+            modal.innerHTML = `
+                <div class="modal-card">
+                    <button type="button" class="modal-close-btn" id="modalCloseBtn" title="Κλείσιμο" aria-label="Κλείσιμο">&times;</button>
+                    <h2 class="modal-title" id="modalAppTitle">Εξάσκηση στην Παραγοντοποίηση</h2>
+                    <div class="modal-badge">Έκδοση: <span id="modalAppVersion">${APP_VERSION}</span></div>
+                    <div class="modal-body">
+                        <div class="modal-architect">Program Architect: <strong>George Petrakis</strong></div>
+                        <div class="modal-license">
+                            Άδεια χρήσης: 
+                            <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer">GNU GPLv3</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        } else {
+            const versionEl = modal.querySelector('#modalAppVersion');
+            if (versionEl) {
+                versionEl.textContent = APP_VERSION;
+            }
+        }
+
+        this.aboutModal = modal;
+
+        // Άνοιγμα modal με κλικ στο κουμπί πληροφοριών
+        if (aboutBtn) {
+            aboutBtn.addEventListener('click', () => this.openAboutModal());
+        }
+
+        // Κλείσιμο με το κουμπί '×'
+        const closeBtn = modal.querySelector('#modalCloseBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.closeAboutModal());
+        }
+
+        // Κλείσιμο με κλικ έξω από την κάρτα (στο overlay)
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                this.closeAboutModal();
+            }
+        });
+
+        // Κλείσιμο με το πλήκτρο Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.aboutModal && this.aboutModal.classList.contains('active')) {
+                this.closeAboutModal();
+            }
+        });
+    },
+
+    openAboutModal: function() {
+        if (this.aboutModal) {
+            this.aboutModal.classList.add('active');
+            const closeBtn = this.aboutModal.querySelector('#modalCloseBtn');
+            if (closeBtn) {
+                closeBtn.focus();
+            }
+        }
+    },
+
+    closeAboutModal: function() {
+        if (this.aboutModal) {
+            this.aboutModal.classList.remove('active');
+            const aboutBtn = document.getElementById('aboutBtn');
+            if (aboutBtn) {
+                aboutBtn.focus();
+            }
+        }
     },
     
     // 3. Βοηθητικές Συναρτήσεις (is... format... keydown...)
