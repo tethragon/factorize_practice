@@ -1,3 +1,16 @@
+/*
+    * Copyright (C) 2025 [GEORGE PETRAKIS]
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    * GNU General Public License for more details.
+    */
 // ============================================================================
 // ΕΚΔΟΣΗ ΕΦΑΡΜΟΓΗΣ (APPLICATION VERSION)
 // Τροποποιήστε την παρακάτω σταθερά για ενημέρωση της έκδοσης της εφαρμογής
@@ -126,6 +139,7 @@ const App = {
                     <div class="modal-badge">Έκδοση: <span id="modalAppVersion">${APP_VERSION}</span></div>
                     <div class="modal-body">
                         <div class="modal-architect">Program Architect: <strong>George Petrakis</strong></div>
+                        <div class="modal-copyright">Copyright: &copy; George Petrakis 2025</div>
                         <div class="modal-license">
                             Άδεια χρήσης: 
                             <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer">GNU GPLv3</a>
